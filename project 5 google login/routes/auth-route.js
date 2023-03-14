@@ -1,4 +1,3 @@
-import { render } from 'ejs'
 import express from 'express'
 const router = express.Router()
 import passport from 'passport'
@@ -8,6 +7,23 @@ import bcrypt from 'bcrypt'
 router.get('/login', (req, res) => {
   res.render('login', { user: req.user })
 })
+
+router.post(
+  '/login',
+  passport.authenticate('local', {
+    failureRedirect: '/auth/login',
+    failureFlash: 'Wrong email or password',
+  }),
+  (req, res) => {
+    if (req.session.returnTo) {
+      let newPath = req.session.returnTo
+      req.session.returnTo = ''
+      res.redirect(newPath)
+    } else {
+      res.redirect('/profile')
+    }
+  },
+)
 
 router.get('/signup', (req, res) => {
   res.render('signup', { user: req.user })
@@ -40,23 +56,6 @@ router.get('/logout', (req, res) => {
   req.logOut()
   res.redirect('/')
 })
-
-router.post(
-  '/login',
-  passport.authenticate('local', {
-    failureRedirect: '/auth/login',
-    failureFlash: 'Wrong email or password',
-  }),
-  (req, res) => {
-    if (req.session.returnTo) {
-      let newPath = req.session.returnTo
-      req.session.returnTo = ''
-      res.redirect(newPath)
-    } else {
-      res.redirect('/profile')
-    }
-  },
-)
 
 router.get(
   '/google',

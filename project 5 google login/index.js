@@ -6,7 +6,6 @@ dotenv.config()
 import authRoute from './routes/auth-route.js'
 import './config/passport.js'
 import profileRoute from './routes/profile-route.js'
-import cookieSession from 'cookie-session'
 import passport from 'passport'
 import session from 'express-session'
 import flash from 'connect-flash'
